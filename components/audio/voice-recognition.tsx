@@ -27,9 +27,34 @@ export function VoiceRecognition({
   const [lastCommand, setLastCommand] = useState("")
   const [isMobile, setIsMobile] = useState(false)
   const [permissionStatus, setPermissionStatus] = useState<string>("unknown")
+  const [performanceMetrics, setPerformanceMetrics] = useState({
+    startTime: 0,
+    responseTime: 0,
+    errorCount: 0,
+  })
+  const [networkStatus, setNetworkStatus] = useState<'online' | 'offline'>('online')
+  const [batteryLevel, setBatteryLevel] = useState<number | null>(null)
 
   const recognitionRef = useRef<any | null>(null)
   const restartTimeoutRef = useRef<NodeJS.Timeout>()
+  const gestureTimeoutRef = useRef<NodeJS.Timeout>()
+
+  // Network status handler
+  const updateNetworkStatus = () => {
+    setNetworkStatus(navigator.onLine ? 'online' : 'offline')
+  }
+
+  // Gesture handling for iOS Safari
+  const handleUserGesture = () => {
+    if (isMobile && !isSupported) {
+      // Clear any existing gesture timeout
+      if (gestureTimeoutRef.current) {
+        clearTimeout(gestureTimeoutRef.current)
+      }
+      // Set a flag that user has interacted
+      localStorage.setItem('userGestureGranted', 'true')
+    }
+  }
 
   useEffect(() => {
     // Detect mobile device
@@ -40,6 +65,26 @@ export function VoiceRecognition({
     }
 
     const mobile = checkMobile()
+
+    // Monitor network status
+    updateNetworkStatus()
+    window.addEventListener('online', updateNetworkStatus)
+    window.addEventListener('offline', updateNetworkStatus)
+
+    // Monitor battery status (if available)
+    if ('getBattery' in navigator) {
+      (navigator as any).getBattery().then((battery: any) => {
+        setBatteryLevel(battery.level * 100)
+        battery.addEventListener('levelchange', () => {
+          setBatteryLevel(battery.level * 100)
+        })
+      })
+    }
+
+    if (mobile) {
+      document.addEventListener('touchstart', handleUserGesture, { once: true })
+      document.addEventListener('click', handleUserGesture, { once: true })
+    }
 
     // Check for speech recognition support with better mobile detection
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
@@ -66,9 +111,10 @@ export function VoiceRecognition({
         console.log("[v0] Voice recognition started")
         setIsRecording(true)
         setPermissionStatus("granted")
+        setPerformanceMetrics(prev => ({ ...prev, startTime: Date.now() }))
       }
 
-      recognition.onresult = (event) => {
+      recognition.onresult = (event: any) => {
         let finalTranscript = ""
         let interimTranscript = ""
         let bestConfidence = 0
@@ -94,6 +140,13 @@ export function VoiceRecognition({
           console.log("[v0] Final transcript:", finalTranscript)
           setLastCommand(finalTranscript)
 
+          // Performance tracking
+          const responseTime = Date.now() - performanceMetrics.startTime
+          setPerformanceMetrics(prev => ({
+            ...prev,
+            responseTime: (prev.responseTime + responseTime) / 2, // Average response time
+          }))
+
           // Enhanced command processing
           processVoiceCommand(finalTranscript)
 
@@ -103,13 +156,21 @@ export function VoiceRecognition({
         }
       }
 
-      recognition.onerror = (event) => {
+      recognition.onerror = (event: any) => {
         console.error("[v0] Speech recognition error:", event.error)
+
+        // Performance tracking
+        setPerformanceMetrics(prev => ({
+          ...prev,
+          errorCount: prev.errorCount + 1,
+        }))
 
         if (event.error === "not-allowed") {
           setPermissionStatus("denied")
         } else if (event.error === "no-speech") {
           setPermissionStatus("no-speech")
+        } else if (event.error === "network") {
+          setPermissionStatus("network-error")
         }
 
         setIsRecording(false)
@@ -119,10 +180,24 @@ export function VoiceRecognition({
         console.log("[v0] Voice recognition ended")
         setIsRecording(false)
 
-        // Auto-restart logic with mobile considerations
-        if (isListening && !mobile) {
+        // Auto-restart logic with mobile, battery, and network considerations
+        const shouldAutoRestart = isListening && (
+          !mobile || // Always auto-restart on desktop
+          (mobile && networkStatus === 'online' && (batteryLevel === null || batteryLevel > 20)) // On mobile, only if online and battery > 20%
+        )
+
+        if (shouldAutoRestart) {
           if (restartTimeoutRef.current) {
             clearTimeout(restartTimeoutRef.current)
+          }
+
+          // Adjust delay based on battery and network
+          let delay = mobile ? 1000 : 500
+          if (batteryLevel !== null && batteryLevel < 30) {
+            delay *= 2 // Double delay on low battery
+          }
+          if (networkStatus === 'offline') {
+            delay *= 3 // Triple delay when offline
           }
 
           restartTimeoutRef.current = setTimeout(
@@ -136,8 +211,8 @@ export function VoiceRecognition({
                 console.error("[v0] Error restarting recognition:", error)
               }
             },
-            mobile ? 1000 : 500,
-          ) // Longer delay for mobile
+            delay,
+          )
         }
       }
     }
@@ -148,6 +223,15 @@ export function VoiceRecognition({
       }
       if (restartTimeoutRef.current) {
         clearTimeout(restartTimeoutRef.current)
+      }
+      if (gestureTimeoutRef.current) {
+        clearTimeout(gestureTimeoutRef.current)
+      }
+      window.removeEventListener('online', updateNetworkStatus)
+      window.removeEventListener('offline', updateNetworkStatus)
+      if (mobile) {
+        document.removeEventListener('touchstart', handleUserGesture)
+        document.removeEventListener('click', handleUserGesture)
       }
     }
   }, [])
@@ -251,10 +335,27 @@ export function VoiceRecognition({
             Your browser doesn't support voice recognition. Please use a modern browser like Chrome or Edge.
           </p>
           {isMobile && (
-            <p className="text-xs text-muted-foreground">
-              On mobile devices, try using Chrome browser for better voice recognition support.
-            </p>
+            <div className="space-y-2">
+              <p className="text-xs text-muted-foreground">
+                On mobile devices, try using Chrome browser for better voice recognition support.
+              </p>
+              {networkStatus === 'offline' && (
+                <p className="text-xs text-amber-600">
+                  ⚠️ You're offline. Voice recognition requires an internet connection.
+                </p>
+              )}
+              {batteryLevel !== null && batteryLevel < 20 && (
+                <p className="text-xs text-amber-600">
+                  🔋 Battery low ({Math.round(batteryLevel)}%). Voice recognition may be limited.
+                </p>
+              )}
+            </div>
           )}
+          <div className="mt-4 p-3 bg-muted/50 rounded-lg">
+            <p className="text-xs text-muted-foreground">
+              <strong>Fallback:</strong> Use manual controls or keyboard input for audio commands.
+            </p>
+          </div>
         </CardContent>
       </Card>
     )
@@ -293,6 +394,22 @@ export function VoiceRecognition({
           <div className="mb-4 p-3 bg-destructive/10 rounded-lg">
             <p className="text-sm text-destructive">
               Microphone access denied. Please enable microphone permissions in your browser settings.
+            </p>
+          </div>
+        )}
+
+        {permissionStatus === "network-error" && (
+          <div className="mb-4 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+            <p className="text-sm text-amber-700">
+              Network error detected. Voice recognition requires an internet connection.
+            </p>
+          </div>
+        )}
+
+        {networkStatus === 'offline' && (
+          <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+            <p className="text-sm text-yellow-700">
+              ⚠️ You're currently offline. Voice recognition features are limited.
             </p>
           </div>
         )}
@@ -337,13 +454,60 @@ export function VoiceRecognition({
           </div>
         </div>
 
-        <div className="mt-4 text-xs text-muted-foreground">
-          <p>
-            💡 <strong>Tip:</strong>{" "}
-            {isMobile
-              ? "On mobile, speak clearly after tapping Voice Control. The system will process your command automatically."
-              : "Speak clearly and wait for the system to process your command. Voice control will continue listening for new commands."}
-          </p>
+        <div className="mt-4 space-y-3">
+          <div className="text-xs text-muted-foreground">
+            <p>
+              💡 <strong>Tip:</strong>{" "}
+              {isMobile
+                ? "On mobile, speak clearly after tapping Voice Control. The system will process your command automatically."
+                : "Speak clearly and wait for the system to process your command. Voice control will continue listening for new commands."}
+            </p>
+          </div>
+
+          {/* Performance Metrics */}
+          {performanceMetrics.errorCount > 0 && (
+            <div className="p-2 bg-amber-50 border border-amber-200 rounded text-xs">
+              <div className="flex items-center gap-2">
+                <span className="text-amber-600">⚠️ Performance Issues Detected</span>
+              </div>
+              <div className="mt-1 text-amber-700">
+                <p>Avg Response: {performanceMetrics.responseTime.toFixed(0)}ms</p>
+                <p>Errors: {performanceMetrics.errorCount}</p>
+                {batteryLevel !== null && <p>Battery: {Math.round(batteryLevel)}%</p>}
+                <p>Network: {networkStatus}</p>
+              </div>
+            </div>
+          )}
+
+          {/* Manual Command Input Fallback */}
+          <div className="p-3 bg-muted/30 rounded-lg">
+            <p className="text-xs font-medium mb-2">Manual Command Input:</p>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                placeholder="Type a command..."
+                className="flex-1 px-2 py-1 text-xs border rounded"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && e.currentTarget.value.trim()) {
+                    onCommand(e.currentTarget.value.trim())
+                    e.currentTarget.value = ''
+                  }
+                }}
+              />
+              <button
+                className="px-3 py-1 text-xs bg-primary text-primary-foreground rounded hover:bg-primary/90"
+                onClick={(e) => {
+                  const input = e.currentTarget.previousElementSibling as HTMLInputElement
+                  if (input.value.trim()) {
+                    onCommand(input.value.trim())
+                    input.value = ''
+                  }
+                }}
+              >
+                Send
+              </button>
+            </div>
+          </div>
         </div>
       </CardContent>
     </Card>

@@ -17,9 +17,20 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: "AudioStory - Interactive Audiobook Platform",
+  title: "Roleander Books - Interactive Audiobook Platform",
   description: "Immerse yourself in interactive audiobook experiences with voice-controlled branching narratives",
   generator: "v0.app",
+  manifest: "/manifest.json",
+  viewport: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no",
+  themeColor: "#000000",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Roleander Books",
+  },
+  formatDetection: {
+    telephone: false,
+  },
 }
 
 export default function RootLayout({
