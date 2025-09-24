@@ -177,7 +177,7 @@ export function LibraryDashboard({ user }: LibraryDashboardProps) {
                       <CreditCard className="mr-2 h-4 w-4" />
                       Subscription
                     </DropdownMenuItem>
-                    {(user?.email && user.email.toLowerCase() === "rdcpulido@gmail.com") && (
+                    {userProfile?.role === "admin" && (
                       <DropdownMenuItem onClick={() => router.push("/admin")}>
                         Admin Panel
                       </DropdownMenuItem>
