@@ -33,10 +33,11 @@ interface LibraryDashboardProps {
 }
 
 export function LibraryDashboard({ user }: LibraryDashboardProps) {
-   const [searchQuery, setSearchQuery] = useState("")
-   const [userProfile, setUserProfile] = useState<UserProfile | null>(null)
-   const router = useRouter()
-   const supabase = createClient()
+    const [searchQuery, setSearchQuery] = useState("")
+    const [userProfile, setUserProfile] = useState<UserProfile | null>(null)
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+    const router = useRouter()
+    const supabase = createClient()
 
    useEffect(() => {
      if (user) {
@@ -155,9 +156,14 @@ export function LibraryDashboard({ user }: LibraryDashboardProps) {
               )}
 
               {user ? (
-                <DropdownMenu>
+                <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="relative h-8 w-8 sm:h-10 sm:w-10 rounded-full">
+                    <Button
+                      variant="ghost"
+                      className="relative h-8 w-8 sm:h-10 sm:w-10 rounded-full"
+                      onMouseEnter={() => setIsDropdownOpen(true)}
+                      onMouseLeave={() => setIsDropdownOpen(false)}
+                    >
                       <Avatar className="h-8 w-8 sm:h-10 sm:w-10">
                         <AvatarFallback className="bg-primary text-primary-foreground text-xs sm:text-sm">
                           {userProfile?.full_name ? getInitials(userProfile.full_name) : "U"}
@@ -165,7 +171,12 @@ export function LibraryDashboard({ user }: LibraryDashboardProps) {
                       </Avatar>
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent className="w-56" align="end">
+                  <DropdownMenuContent
+                    className="w-56"
+                    align="end"
+                    onMouseEnter={() => setIsDropdownOpen(true)}
+                    onMouseLeave={() => setIsDropdownOpen(false)}
+                  >
                     <div className="flex items-center justify-start gap-2 p-2">
                       <div className="flex flex-col space-y-1 leading-none">
                         <p className="font-medium">{userProfile?.full_name || "User"}</p>
@@ -244,7 +255,7 @@ export function LibraryDashboard({ user }: LibraryDashboardProps) {
           </TabsList>
 
           <TabsContent value="browse" className="space-y-4 sm:space-y-6">
-            <SeriesGrid searchQuery={searchQuery} user={user} />
+            <SeriesGrid searchQuery={searchQuery} />
           </TabsContent>
 
           <TabsContent value="progress" className="space-y-4 sm:space-y-6">
