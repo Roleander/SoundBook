@@ -1,0 +1,105 @@
+{
+  "nav": {
+    "home": "Startseite",
+    "library": "Bibliothek",
+    "profile": "Profil",
+    "admin": "Admin",
+    "login": "Anmelden",
+    "signup": "Registrieren",
+    "logout": "Abmelden"
+  },
+  "common": {
+    "loading": "Laden...",
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "delete": "Löschen",
+    "edit": "Bearbeiten",
+    "back": "Zurück",
+    "next": "Weiter",
+    "previous": "Zurück",
+    "search": "Suchen",
+    "filter": "Filtern",
+    "sort": "Sortieren",
+    "play": "Abspielen",
+    "pause": "Pause",
+    "stop": "Stopp"
+  },
+  "auth": {
+    "email": "E-Mail",
+    "password": "Passwort",
+    "confirmPassword": "Passwort bestätigen",
+    "fullName": "Vollständiger Name",
+    "login": "Anmelden",
+    "signup": "Registrieren",
+    "loginTitle": "Willkommen zurück",
+    "signupTitle": "Konto erstellen",
+    "loginSubtitle": "Melden Sie sich in Ihrem Konto an",
+    "signupSubtitle": "Treten Sie unserer Hörbuch-Community bei",
+    "noAccount": "Kein Konto?",
+    "haveAccount": "Bereits ein Konto?",
+    "forgotPassword": "Passwort vergessen?",
+    "checkEmail": "Überprüfen Sie Ihre E-Mail"
+  },
+  "profile": {
+    "title": "Profil",
+    "personalInfo": "Persönliche Informationen",
+    "subscription": "Abonnement",
+    "settings": "Einstellungen",
+    "fullName": "Vollständiger Name",
+    "email": "E-Mail-Adresse",
+    "avatar": "Profilbild",
+    "adminPanel": "Admin-Panel",
+    "freeMember": "Kostenloses Mitglied",
+    "premiumMember": "Premium-Mitglied",
+    "manage": "Verwalten",
+    "upgrade": "Upgrade"
+  },
+  "library": {
+    "title": "Bibliothek",
+    "myBooks": "Meine Bücher",
+    "favorites": "Favoriten",
+    "recent": "Kürzlich abgespielt",
+    "continue": "Weiterhören",
+    "series": "Serien",
+    "chapters": "Kapitel"
+  },
+  "social": {
+    "likes": "Gefällt mir",
+    "comments": "Kommentare",
+    "listeners": "Zuhörer",
+    "like": "Gefällt mir",
+    "unlike": "Gefällt mir nicht mehr",
+    "addComment": "Kommentar hinzufügen...",
+    "postComment": "Kommentar posten",
+    "noComments": "Noch keine Kommentare",
+    "beFirst": "Seien Sie der Erste, der kommentiert!"
+  },
+  "admin": {
+    "dashboard": "Admin-Dashboard",
+    "users": "Benutzer",
+    "content": "Inhalt",
+    "analytics": "Analysen",
+    "settings": "Einstellungen",
+    "upload": "Hochladen",
+    "manage": "Verwalten",
+    "series": "Serien",
+    "audiobooks": "Hörbücher",
+    "choices": "Auswahlmöglichkeiten"
+  },
+  "player": {
+    "nowPlaying": "Gerade läuft",
+    "upNext": "Als nächstes",
+    "playlist": "Wiedergabeliste",
+    "shuffle": "Zufällig",
+    "repeat": "Wiederholen",
+    "volume": "Lautstärke",
+    "speed": "Geschwindigkeit"
+  },
+  "errors": {
+    "generic": "Etwas ist schiefgelaufen",
+    "network": "Netzwerkfehler",
+    "unauthorized": "Nicht autorisiert",
+    "notFound": "Nicht gefunden",
+    "validation": "Validierungsfehler"
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "nav": {
+    "home": "Home",
+    "library": "Library",
+    "profile": "Profile",
+    "admin": "Admin",
+    "login": "Login",
+    "signup": "Sign Up",
+    "logout": "Logout"
+  },
+  "common": {
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "play": "Play",
+    "pause": "Pause",
+    "stop": "Stop"
+  },
+  "auth": {
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "fullName": "Full Name",
+    "login": "Login",
+    "signup": "Sign Up",
+    "loginTitle": "Welcome Back",
+    "signupTitle": "Create Account",
+    "loginSubtitle": "Sign in to your account",
+    "signupSubtitle": "Join our audiobook community",
+    "noAccount": "Don't have an account?",
+    "haveAccount": "Already have an account?",
+    "forgotPassword": "Forgot password?",
+    "checkEmail": "Check your email"
+  },
+  "profile": {
+    "title": "Profile",
+    "personalInfo": "Personal Information",
+    "subscription": "Subscription",
+    "settings": "Settings",
+    "fullName": "Full Name",
+    "email": "Email Address",
+    "avatar": "Profile Picture",
+    "adminPanel": "Admin Panel",
+    "freeMember": "Free Member",
+    "premiumMember": "Premium Member",
+    "manage": "Manage",
+    "upgrade": "Upgrade"
+  },
+  "library": {
+    "title": "Library",
+    "myBooks": "My Books",
+    "favorites": "Favorites",
+    "recent": "Recently Played",
+    "continue": "Continue Listening",
+    "series": "Series",
+    "chapters": "Chapters"
+  },
+  "social": {
+    "likes": "Likes",
+    "comments": "Comments",
+    "listeners": "Listeners",
+    "like": "Like",
+    "unlike": "Unlike",
+    "addComment": "Add a comment...",
+    "postComment": "Post Comment",
+    "noComments": "No comments yet",
+    "beFirst": "Be the first to comment!"
+  },
+  "admin": {
+    "dashboard": "Admin Dashboard",
+    "users": "Users",
+    "content": "Content",
+    "analytics": "Analytics",
+    "settings": "Settings",
+    "upload": "Upload",
+    "manage": "Manage",
+    "series": "Series",
+    "audiobooks": "Audiobooks",
+    "choices": "Choices"
+  },
+  "player": {
+    "nowPlaying": "Now Playing",
+    "upNext": "Up Next",
+    "playlist": "Playlist",
+    "shuffle": "Shuffle",
+    "repeat": "Repeat",
+    "volume": "Volume",
+    "speed": "Speed"
+  },
+  "errors": {
+    "generic": "Something went wrong",
+    "network": "Network error",
+    "unauthorized": "Unauthorized",
+    "notFound": "Not found",
+    "validation": "Validation error"
+  }
+}

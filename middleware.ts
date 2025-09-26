@@ -1,7 +1,23 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
+import createMiddleware from 'next-intl/middleware'
+import { locales } from './i18n'
 
-export async function middleware(request: NextRequest) {
+const intlMiddleware = createMiddleware({
+  locales,
+  defaultLocale: 'en',
+  localePrefix: 'as-needed'
+})
+
+export default async function middleware(request: NextRequest) {
+  // Run i18n middleware first
+  const intlResponse = intlMiddleware(request)
+
+  // If i18n middleware returns a redirect, return it
+  if (intlResponse.status !== 200) {
+    return intlResponse
+  }
+
   let supabaseResponse = NextResponse.next({
     request,
   })

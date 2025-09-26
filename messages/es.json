@@ -1,0 +1,105 @@
+{
+  "nav": {
+    "home": "Inicio",
+    "library": "Biblioteca",
+    "profile": "Perfil",
+    "admin": "Admin",
+    "login": "Iniciar Sesión",
+    "signup": "Registrarse",
+    "logout": "Cerrar Sesión"
+  },
+  "common": {
+    "loading": "Cargando...",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "previous": "Anterior",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "sort": "Ordenar",
+    "play": "Reproducir",
+    "pause": "Pausar",
+    "stop": "Detener"
+  },
+  "auth": {
+    "email": "Correo Electrónico",
+    "password": "Contraseña",
+    "confirmPassword": "Confirmar Contraseña",
+    "fullName": "Nombre Completo",
+    "login": "Iniciar Sesión",
+    "signup": "Registrarse",
+    "loginTitle": "Bienvenido de Vuelta",
+    "signupTitle": "Crear Cuenta",
+    "loginSubtitle": "Inicia sesión en tu cuenta",
+    "signupSubtitle": "Únete a nuestra comunidad de audiolibros",
+    "noAccount": "¿No tienes cuenta?",
+    "haveAccount": "¿Ya tienes cuenta?",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "checkEmail": "Revisa tu correo electrónico"
+  },
+  "profile": {
+    "title": "Perfil",
+    "personalInfo": "Información Personal",
+    "subscription": "Suscripción",
+    "settings": "Configuración",
+    "fullName": "Nombre Completo",
+    "email": "Dirección de Correo",
+    "avatar": "Foto de Perfil",
+    "adminPanel": "Panel de Admin",
+    "freeMember": "Miembro Gratuito",
+    "premiumMember": "Miembro Premium",
+    "manage": "Administrar",
+    "upgrade": "Actualizar"
+  },
+  "library": {
+    "title": "Biblioteca",
+    "myBooks": "Mis Libros",
+    "favorites": "Favoritos",
+    "recent": "Reproducidos Recientemente",
+    "continue": "Continuar Escuchando",
+    "series": "Series",
+    "chapters": "Capítulos"
+  },
+  "social": {
+    "likes": "Me Gusta",
+    "comments": "Comentarios",
+    "listeners": "Oyentes",
+    "like": "Me Gusta",
+    "unlike": "Quitar Me Gusta",
+    "addComment": "Agregar un comentario...",
+    "postComment": "Publicar Comentario",
+    "noComments": "Aún no hay comentarios",
+    "beFirst": "¡Sé el primero en comentar!"
+  },
+  "admin": {
+    "dashboard": "Panel de Administración",
+    "users": "Usuarios",
+    "content": "Contenido",
+    "analytics": "Analíticas",
+    "settings": "Configuración",
+    "upload": "Subir",
+    "manage": "Administrar",
+    "series": "Series",
+    "audiobooks": "Audiolibros",
+    "choices": "Opciones"
+  },
+  "player": {
+    "nowPlaying": "Reproduciendo Ahora",
+    "upNext": "Siguiente",
+    "playlist": "Lista de Reproducción",
+    "shuffle": "Aleatorio",
+    "repeat": "Repetir",
+    "volume": "Volumen",
+    "speed": "Velocidad"
+  },
+  "errors": {
+    "generic": "Algo salió mal",
+    "network": "Error de red",
+    "unauthorized": "No autorizado",
+    "notFound": "No encontrado",
+    "validation": "Error de validación"
+  }
+}
