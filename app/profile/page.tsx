@@ -7,8 +7,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-import { ArrowLeft, Crown, User, Calendar, CreditCard } from "lucide-react"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { ArrowLeft, Crown, User, Calendar, CreditCard, Upload, Shield } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { redirect } from "next/navigation"
 
@@ -27,6 +27,7 @@ export default function ProfilePage() {
   const [profile, setProfile] = useState<UserProfile | null>(null)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+  const [uploading, setUploading] = useState(false)
   const [fullName, setFullName] = useState("")
   const router = useRouter()
   const supabase = createClient()
@@ -109,6 +110,46 @@ export default function ProfilePage() {
     }
   }
 
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file || !user || !profile) return
+
+    setUploading(true)
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
+
+      const response = await fetch('/api/upload-logo', {
+        method: 'POST',
+        body: formData
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Upload failed')
+      }
+
+      if (data.url) {
+        // Update profile logo_url
+        const { error } = await supabase
+          .from('profiles')
+          .update({ logo_url: data.url })
+          .eq('id', user.id)
+
+        if (error) throw error
+
+        setProfile({ ...profile, logo_url: data.url })
+        alert("Avatar updated successfully!")
+      }
+    } catch (error) {
+      console.error("Error uploading avatar:", error)
+      alert("Error uploading avatar. Please try again.")
+    } finally {
+      setUploading(false)
+    }
+  }
+
   const getInitials = (name: string) => {
     return name
       .split(" ")
@@ -163,6 +204,7 @@ export default function ProfilePage() {
               <CardHeader className="text-center">
                 <div className="flex justify-center mb-4">
                   <Avatar className="h-20 w-20">
+                    <AvatarImage src={profile.logo_url} />
                     <AvatarFallback className="bg-primary text-primary-foreground text-xl">
                       {getInitials(profile.full_name || "User")}
                     </AvatarFallback>
@@ -181,6 +223,15 @@ export default function ProfilePage() {
                     <Badge variant="secondary">Free Member</Badge>
                   )}
                 </div>
+
+                {profile.role === 'admin' && (
+                  <div className="flex justify-center mt-4">
+                    <Button variant="outline" onClick={() => router.push("/admin")} className="flex items-center gap-2">
+                      <Shield className="h-4 w-4" />
+                      Admin Panel
+                    </Button>
+                  </div>
+                )}
               </CardHeader>
 
               <CardContent className="space-y-4">
@@ -226,6 +277,26 @@ export default function ProfilePage() {
                     onChange={(e) => setFullName(e.target.value)}
                     placeholder="Enter your full name"
                   />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="avatar">Profile Picture</Label>
+                  <div className="flex items-center gap-4">
+                    <Avatar className="h-16 w-16">
+                      <AvatarImage src={profile.logo_url} />
+                      <AvatarFallback>{getInitials(profile.full_name || "User")}</AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <Input
+                        id="avatar"
+                        type="file"
+                        accept="image/*"
+                        onChange={handleAvatarUpload}
+                        disabled={uploading}
+                      />
+                      <p className="text-xs text-muted-foreground mt-1">Max 5MB, image files only</p>
+                    </div>
+                  </div>
                 </div>
 
                 <Button
