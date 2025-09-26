@@ -9,7 +9,7 @@ export default function HomePage() {
       <div className="relative overflow-hidden bg-gradient-red">
         <div className="absolute inset-0 bg-black/20" />
         <div className="relative z-10 container mx-auto px-4 py-24 text-center">
-          <h1 className="text-6xl font-bold text-white mb-6 text-balance">SoundBook</h1>
+          <h1 className="text-6xl font-bold text-white mb-6 text-balance">SoundBox</h1>
           <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto text-pretty">
             Your personal audiobook library. Discover, listen, and immerse yourself in stories that transport you to new
             worlds.
