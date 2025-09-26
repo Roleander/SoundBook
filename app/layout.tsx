@@ -1,36 +1,15 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Crimson_Text, Inter } from "next/font/google"
+import { GeistSans } from "geist/font/sans"
+import { GeistMono } from "geist/font/mono"
+import { Analytics } from "@vercel/analytics/next"
+import { Suspense } from "react"
 import "./globals.css"
 
-const crimsonText = Crimson_Text({
-  subsets: ["latin"],
-  weight: ["400", "600", "700"],
-  variable: "--font-serif",
-  display: "swap",
-})
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-sans",
-  display: "swap",
-})
-
 export const metadata: Metadata = {
-  title: "Roleander Books - Interactive Audiobook Platform",
-  description: "Immerse yourself in interactive audiobook experiences with voice-controlled branching narratives",
+  title: "SoundBook - Your Personal Audiobook Library",
+  description: "Discover, listen, and immerse yourself in audiobooks with SoundBook",
   generator: "v0.app",
-  manifest: "/manifest.json",
-  viewport: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no",
-  themeColor: "#000000",
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: "default",
-    title: "Roleander Books",
-  },
-  formatDetection: {
-    telephone: false,
-  },
 }
 
 export default function RootLayout({
@@ -39,8 +18,11 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className={`${crimsonText.variable} ${inter.variable}`}>
-      <body className="font-sans antialiased">{children}</body>
+    <html lang="en" className="dark">
+      <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}>
+        <Suspense fallback={null}>{children}</Suspense>
+        <Analytics />
+      </body>
     </html>
   )
 }
